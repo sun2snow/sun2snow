@@ -33,7 +33,7 @@ No personal access token, third-party account, Vercel deployment, or custom secr
 
 - Stats use the maintained `stats-organization/github-readme-stats-action` and its lockfile-pinned bundled core, not a live public card endpoint. The empty `core_version` input intentionally avoids installing a floating core release.
 - Both workflows use only the built-in repository token. Do not replace it with a broad PAT or enable private repository access.
-- The activity card uses the renderer's default current-year commit count. It does not claim to measure all-time activity.
+- The activity card uses the renderer's default reporting period, labeled on the card as "last year". It does not claim to measure all-time commits.
 - The language card excludes this profile repository, so decorative SVGs and maintenance scripts do not distort language usage. Upstream language statistics also exclude forks by default; they do not measure proficiency.
 - Snake uses `Platane/snk/svg-only` with matching light/dark palettes and a warm-orange snake.
 - Top-level third-party Actions are pinned to full commit SHAs. Dependabot checks GitHub Actions monthly; review updates before merging.
