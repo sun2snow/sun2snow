@@ -1,0 +1,87 @@
+name: Update profile stats
+
+on:
+  schedule:
+    - cron: '13 3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/stats.yml'
+      - 'scripts/**'
+      - 'tests/**'
+
+permissions:
+  contents: read
+
+# Both generators publish to the same branch. Never publish concurrently.
+concurrency:
+  group: profile-output
+  cancel-in-progress: false
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Test the publisher
+        run: python3 -m unittest discover -s tests -v
+
+      # An empty core_version uses the action's lockfile-pinned bundled core.
+      # Never pass a PAT: the built-in token only has access to this public repo.
+      - name: Generate dark activity card
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2
+        with:
+          card: stats
+          core_version: ''
+          options: >-
+            {"username":"${{ github.repository_owner }}","custom_title":"GitHub Activity","show_icons":true,"hide_rank":true,"card_width":410,"disable_animations":true,"title_color":"79dcff","text_color":"c9d5e8","icon_color":"b4a0ff","bg_color":"0d1117","border_color":"2b3550","border_radius":12}
+          path: dist/stats-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: 'true'
+
+      - name: Generate light activity card
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2
+        with:
+          card: stats
+          core_version: ''
+          options: >-
+            {"username":"${{ github.repository_owner }}","custom_title":"GitHub Activity","show_icons":true,"hide_rank":true,"card_width":410,"disable_animations":true,"title_color":"1688b5","text_color":"34435c","icon_color":"7954d6","bg_color":"ffffff","border_color":"d8e0ee","border_radius":12}
+          path: dist/stats-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: 'true'
+
+      - name: Generate dark language card
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2
+        with:
+          card: top-langs
+          core_version: ''
+          options: >-
+            {"username":"${{ github.repository_owner }}","custom_title":"Languages in My Repos","layout":"compact","langs_count":6,"exclude_repo":"${{ github.event.repository.name }}","card_width":410,"disable_animations":true,"title_color":"79dcff","text_color":"c9d5e8","bg_color":"0d1117","border_color":"2b3550","border_radius":12}
+          path: dist/languages-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: 'true'
+
+      - name: Generate light language card
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2
+        with:
+          card: top-langs
+          core_version: ''
+          options: >-
+            {"username":"${{ github.repository_owner }}","custom_title":"Languages in My Repos","layout":"compact","langs_count":6,"exclude_repo":"${{ github.event.repository.name }}","card_width":410,"disable_animations":true,"title_color":"1688b5","text_color":"34435c","bg_color":"ffffff","border_color":"d8e0ee","border_radius":12}
+          path: dist/languages-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: 'true'
+
+      # No partial publication: all four cards must have succeeded first.
+      - name: Publish cards without replacing the snake
+        run: >-
+          python3 scripts/publish_assets.py
+          dist/stats-dark.svg dist/stats-light.svg
+          dist/languages-dark.svg dist/languages-light.svg
+          --message 'chore: refresh profile stats'

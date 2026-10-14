@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="230" viewBox="0 0 1000 230" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Sun to Snow — sun2snow</title>
+  <desc id="desc">An ice-blue and violet circuit connects a warm orange sun to a snowflake on a pale background.</desc>
+  <defs>
+    <linearGradient id="surface" x1="0" y1="0" x2="1000" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/><stop offset="1" stop-color="#eff3ff"/>
+    </linearGradient>
+    <linearGradient id="spectrum" x1="42" y1="0" x2="958" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d9822b"/><stop offset="0.42" stop-color="#7954d6"/><stop offset="1" stop-color="#1688b5"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#8b7be0" stop-opacity="0.12"/><stop offset="1" stop-color="#8b7be0" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#65749b" opacity="0.15"/>
+    </pattern>
+  </defs>
+  <rect x="0.5" y="0.5" width="999" height="229" rx="18" fill="url(#surface)" stroke="#d8e0ee"/>
+  <rect x="16" y="16" width="968" height="198" rx="12" fill="url(#grid)"/>
+  <ellipse cx="785" cy="116" rx="210" ry="108" fill="url(#glow)"/>
+  <path d="M42 1H958" stroke="url(#spectrum)" stroke-width="2"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
+    <text x="44" y="52" fill="#586886" font-size="12" letter-spacing="4">SUN → SNOW</text>
+    <text x="41" y="124" fill="#202d48" font-size="62" font-weight="700" letter-spacing="-2">sun2snow<tspan fill="#1688b5">_</tspan></text>
+    <text x="44" y="169" fill="#586886" font-size="16">A little warmth. A little winter.</text>
+  </g>
+  <g stroke="#c6d1e6" stroke-width="1.2">
+    <path d="M566 52H632L654 74H700M608 188H672L697 163H894L922 135H958"/>
+    <path d="M580 142H620L646 116H678M850 57H908L932 81H958"/>
+    <circle cx="566" cy="52" r="3" fill="#eff3ff"/><circle cx="608" cy="188" r="3" fill="#eff3ff"/>
+    <circle cx="958" cy="81" r="3" fill="#eff3ff"/><circle cx="958" cy="135" r="3" fill="#eff3ff"/>
+  </g>
+  <circle cx="718" cy="108" r="48" stroke="#c67324" stroke-opacity="0.15"/>
+  <circle cx="718" cy="108" r="36" fill="#edac5c" fill-opacity="0.08" stroke="#c67324" stroke-opacity="0.3"/>
+  <g stroke="#c67324" stroke-width="2.4" stroke-linecap="round">
+    <circle cx="718" cy="108" r="13" fill="#edac5c" fill-opacity="0.15"/>
+    <path d="M718 83V78M718 133V138M693 108H688M743 108H748M700 90L696 86M736 126L740 130M736 90L740 86M700 126L696 130"/>
+  </g>
+  <path d="M768 108H815" stroke="url(#spectrum)" stroke-width="1.5" stroke-dasharray="3 6"/>
+  <path d="M807 103L815 108L807 113" stroke="#7954d6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="866" cy="108" r="48" stroke="#1688b5" stroke-opacity="0.15"/>
+  <circle cx="866" cy="108" r="36" fill="#1688b5" fill-opacity="0.05" stroke="#1688b5" stroke-opacity="0.3"/>
+  <g stroke="#1688b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M866 83V133M844.35 95.5L887.65 120.5M844.35 120.5L887.65 95.5"/>
+    <path id="branch" d="M859 89L866 96L873 89"/>
+    <use href="#branch" transform="rotate(60 866 108)"/><use href="#branch" transform="rotate(120 866 108)"/>
+    <use href="#branch" transform="rotate(180 866 108)"/><use href="#branch" transform="rotate(240 866 108)"/>
+    <use href="#branch" transform="rotate(300 866 108)"/>
+  </g>
+  <g fill="#586886" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" letter-spacing="2">
+    <text x="704" y="179">SUN</text><text x="847" y="179">SNOW</text>
+  </g>
+  <path d="M44 198H116" stroke="url(#spectrum)" stroke-width="2" stroke-linecap="round"/>
+</svg>
