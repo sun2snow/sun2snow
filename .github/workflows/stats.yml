@@ -2,7 +2,9 @@ name: Update profile stats
 
 on:
   schedule:
-    - cron: '13 3 * * *'
+    # Multiple refresh opportunities per day if GitHub delays/drops an event.
+    # UTC; staggered from the snake and away from the start of the hour.
+    - cron: '47 4,10,16,22 * * *'
   workflow_dispatch:
   push:
     branches: [main]

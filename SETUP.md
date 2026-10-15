@@ -23,10 +23,12 @@ No personal access token, third-party account, Vercel deployment, or custom secr
 
 ## Updates
 
-- Stats: daily at **03:13 UTC**.
-- Snake: daily at **03:43 UTC**.
-- Either workflow can be run with **Actions → workflow → Run workflow**.
-- GitHub may delay scheduled runs. Scheduled workflows in inactive public repositories can be disabled after 60 days; re-enable them in Actions when needed.
+- Stats: every six hours, at **04:47, 10:47, 16:47, and 22:47 UTC**.
+- Snake: every six hours, at **04:53, 10:53, 16:53, and 22:53 UTC**.
+- These four daily refresh opportunities allow a later run to recover from a missed scheduled event or transient failure. Unchanged images do not create commits; successful runs may therefore leave the `output` commit date unchanged.
+- Either workflow can also be run with **Actions → workflow → Run workflow**.
+- GitHub may delay or drop scheduled runs; this is best-effort automatic refresh, not a guaranteed daily delivery time. Scheduled workflows in inactive public repositories can be disabled after 60 days; re-enable them in Actions when needed.
+- To verify automatic refresh, check each workflow's run history for a successful **`schedule`** event. A successful `push` or `workflow_dispatch` run only verifies generation/publication, not the scheduler. The workflow files must remain on the repository's default branch (`main`).
 - Edits to a workflow, `scripts/`, or `tests/` also trigger its workflow on `main`. Ordinary README edits do not need a data refresh.
 
 ## Data and privacy
