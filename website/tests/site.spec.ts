@@ -12,8 +12,14 @@ test('shows the approved content and working navigation', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('sun2snow');
   await expect(page.getByText('A personal space for projects, notes, and experiments.')).toBeVisible();
+  await expect(page.locator('.project-heading h3')).toHaveText(['QOJ-Translate', 'VR OI Simulator']);
   await expect(page.getByRole('heading', { name: 'QOJ-Translate' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'View QOJ-Translate on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate');
+  const simulator = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'VR OI Simulator' }) });
+  await expect(simulator.locator('.project-description')).toHaveText('A first-person 3D browser game set in an Informatics Olympiad exam room.');
+  await expect(simulator.locator('.tags li')).toHaveText(['JavaScript', 'Three.js', 'WebGL']);
+  await expect(simulator.getByRole('link', { name: 'View VR OI Simulator on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/vr-oi-simulator');
+  await expect(simulator.getByRole('link', { name: 'aakaakii/vr-oi-simulator', exact: true })).toHaveAttribute('href', 'https://github.com/aakaakii/vr-oi-simulator');
   await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://www.cnblogs.com/oier-wst');
   await expect(page.getByRole('link', { name: 'Visit GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow');
   await expect(page.locator('a[target="_blank"]')).toHaveCount(0);
