@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
+const renderedProjects = await Promise.all(projects.map(async (project) => ({
+  ...project,
+  ...(await render(project)),
+})));
+---
+
+<BaseLayout>
+  <section class="hero" aria-labelledby="intro-heading">
+    <div class="hero-horizon" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="identity">
+        <img class="avatar" src="/avatar.png" alt="sun2snow's GitHub avatar" width="80" height="80" fetchpriority="high" decoding="async" />
+        <span class="identity-caption" aria-hidden="true"><span>sun</span><span class="identity-line"></span><span>snow</span></span>
+      </div>
+      <h1 id="intro-heading">sun<span class="name-transition">2</span>snow<span class="name-period" aria-hidden="true">.</span></h1>
+      <p class="hero-description">{site.introduction}</p>
+      <div class="hero-actions">
+        {projects.length > 0 && <a class="button button-primary" href="#projects">View projects <Icon name="arrow-down" size={17} /></a>}
+        <a class="text-link hero-github" href={site.github}>Visit GitHub <Icon name="arrow-up-right" size={17} /></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="spectrum-divider" aria-hidden="true"></div>
+
+  {projects.length > 0 && <section class="content-section projects-section" id="projects" aria-labelledby="projects-heading">
+    <div class="section-heading">
+      <span class="section-index" aria-hidden="true">01 /</span>
+      <h2 id="projects-heading">Projects</h2>
+    </div>
+    <div class="project-list">
+      {renderedProjects.map(({ data, Content }) => (
+        <article class="project-card">
+          <div class="project-heading">
+            <div class="project-icon" aria-hidden="true"><Icon name="code" size={23} /></div>
+            <h3>{data.title}</h3>
+          </div>
+          <p class="project-description">{data.description}</p>
+          <div class="project-body"><Content /></div>
+          <div class="project-footer">
+            <ul class="tags" aria-label={`${data.title} technologies`}>
+              {data.tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+            <a class="text-link project-link" href={data.repository} aria-label={`View ${data.title} on GitHub`}>View on GitHub <Icon name="arrow-up-right" size={17} /></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>}
+
+  <section class="content-section notes-section" id="notes" aria-labelledby="notes-heading">
+    <div class="section-heading">
+      <span class="section-index" aria-hidden="true">{projects.length > 0 ? '02' : '01'} /</span>
+      <h2 id="notes-heading">Notes</h2>
+    </div>
+    <div class="notes-content">
+      <div>
+        <p class="notes-description">Articles and notes on CNBlogs.</p>
+        <p class="notes-caption">A little more room for words.</p>
+      </div>
+      <a class="text-link blog-link" href={site.blog}>Read the blog <Icon name="arrow-up-right" size={18} /></a>
+    </div>
+  </section>
+</BaseLayout>

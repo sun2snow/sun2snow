@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import Brand from '../components/Brand.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title = site.title, description = site.description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL('/social-card.png', Astro.site);
+const isHome = Astro.url.pathname === '/';
+const hasProjects = (await getCollection('projects', ({ data }) => !data.draft)).length > 0;
+const year = new Date().getUTCFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="color-scheme" content="dark" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="sun2snow — Projects, notes, and experiments. A warm sun meets cool snow on a deep blue background." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="sun2snow — Projects, notes, and experiments." />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="wordmark" href="/" aria-label="sun2snow home">
+          <Brand />
+          <span>{site.name}</span>
+        </a>
+        <nav aria-label="Main navigation">
+          {hasProjects && <a href={isHome ? '#projects' : '/#projects'}>Projects</a>}
+          <a href={isHome ? '#notes' : '/#notes'}>Notes</a>
+          <a class="nav-external" href={site.github}>GitHub <Icon name="arrow-up-right" size={14} /></a>
+        </nav>
+      </header>
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <p>© {year} {site.name}</p>
+        <nav aria-label="Social links">
+          <a href={site.github}>GitHub <Icon name="arrow-up-right" size={13} /></a>
+          <a href={site.blog}>Blog <Icon name="arrow-up-right" size={13} /></a>
+        </nav>
+      </footer>
+    </div>
+  </body>
+</html>

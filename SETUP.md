@@ -2,6 +2,8 @@
 
 The public profile is `README.md`. This file documents deployment and maintenance, not additional profile content.
 
+The separate personal website lives in [`website/`](website/README.md). Its Astro build and GitHub Pages deployment do not replace this profile or the `output` branch. See that directory's README for website development, tests, custom-domain setup and publication.
+
 ## First publication
 
 1. Review the files, then commit them on `main` in `sun2snow/sun2snow` and push.
