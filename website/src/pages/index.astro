@@ -1,15 +1,13 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import AccountIcon from '../components/AccountIcon.astro';
 import { site } from '../data/site';
+import { accountGroups } from '../data/accounts';
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
-const renderedProjects = await Promise.all(projects.map(async (project) => ({
-  ...project,
-  ...(await render(project)),
-})));
 ---
 
 <BaseLayout>
@@ -17,56 +15,87 @@ const renderedProjects = await Promise.all(projects.map(async (project) => ({
     <div class="hero-horizon" aria-hidden="true"></div>
     <div class="hero-content">
       <div class="identity">
-        <img class="avatar" src="/avatar.png" alt="sun2snow's GitHub avatar" width="80" height="80" fetchpriority="high" decoding="async" />
+        <img class="avatar" src="/avatar.png" alt="sun2snow's avatar" width="80" height="80" fetchpriority="high" decoding="async" />
         <span class="identity-caption" aria-hidden="true"><span>sun</span><span class="identity-line"></span><span>snow</span></span>
       </div>
-      <h1 id="intro-heading">sun<span class="name-transition">2</span>snow<span class="name-period" aria-hidden="true">.</span></h1>
-      <p class="hero-description">{site.introduction}</p>
-      <div class="hero-actions">
-        {projects.length > 0 && <a class="button button-primary" href="#projects">View projects <Icon name="arrow-down" size={17} /></a>}
-        <a class="text-link hero-github" href={site.github}>Visit GitHub <Icon name="arrow-up-right" size={17} /></a>
+      <div class="hero-summary">
+        <h1 id="intro-heading">sun<span class="name-transition">2</span>snow<span class="name-period" aria-hidden="true">.</span></h1>
+        <p class="hero-description">{site.introduction}</p>
       </div>
     </div>
   </section>
 
   <div class="spectrum-divider" aria-hidden="true"></div>
 
-  {projects.length > 0 && <section class="content-section projects-section" id="projects" aria-labelledby="projects-heading">
+  <section class="content-section connect-section" id="connect" aria-labelledby="connect-heading">
     <div class="section-heading">
       <span class="section-index" aria-hidden="true">01 /</span>
+      <h2 id="connect-heading">Let's connect</h2>
+    </div>
+    {accountGroups.map((group) => (
+      <div class="account-group">
+        <h3>{group.title}</h3>
+        <ul class:list={['account-grid', { 'account-grid-social': group.title === 'Social & contact' }]} aria-label={group.title}>
+          {group.accounts.map((account) => (
+            <li>
+              <div class:list={['account-card', { 'account-contact': !!account.number }]}>
+                <AccountIcon icon={account.icon} />
+                <span class="account-info">
+                  <span class="account-name">{account.name}</span>
+                  {account.number && <span class="account-handle qq-number" id="qq-number" aria-label={`QQ number ${account.number}`}>{account.number}</span>}
+                </span>
+                {account.links.length > 0 && <div class="account-links">
+                  {account.links.map((link) => (
+                    <a class="account-arrow" href={link.href} aria-label={`Visit ${account.name}${link.label ? ` ${link.label}` : ''}`}>
+                      {link.label && <span>{link.label}</span>}
+                      <Icon name="arrow-up-right" size={16} />
+                    </a>
+                  ))}
+                </div>}
+                {account.number && <button class="copy-qq" type="button" data-copy-qq={account.number} aria-label="Copy QQ number" aria-describedby="qq-copy-status" hidden>Copy</button>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+    <p class="copy-status" id="qq-copy-status" role="status" aria-live="polite" aria-atomic="true">Select the QQ number to copy it manually.</p>
+  </section>
+
+  <section class="content-section notes-section" id="notes" aria-labelledby="notes-heading">
+    <div class="section-heading">
+      <span class="section-index" aria-hidden="true">02 /</span>
+      <h2 id="notes-heading">Notes</h2>
+    </div>
+    <div class="notes-content">
+      <p class="notes-description">Articles and notes on CNBlogs.</p>
+      <a class="text-link blog-link" href={site.blog}>Read the blog <Icon name="arrow-up-right" size={18} /></a>
+    </div>
+  </section>
+
+  {projects.length > 0 && <section class="projects-section" id="projects" aria-labelledby="projects-heading">
+    <div class="section-heading">
+      <span class="section-index" aria-hidden="true">03 /</span>
       <h2 id="projects-heading">Projects</h2>
     </div>
     <div class="project-list">
-      {renderedProjects.map(({ data, Content }) => (
+      {projects.map(({ data }) => (
         <article class="project-card">
           <div class="project-heading">
-            <div class="project-icon" aria-hidden="true"><Icon name="code" size={23} /></div>
-            <h3>{data.title}</h3>
+            <h3><Icon name={data.icon} size={18} class={`project-icon project-icon--${data.icon}`} /><span>{data.title}</span></h3>
+            <div class="project-actions">
+              {data.installUrl && <a class="text-link install-link" href={data.installUrl} aria-label={`Install ${data.title}`}>Install <Icon name="arrow-up-right" size={14} /></a>}
+              {data.quickStartUrl && <a class="text-link quick-start" href={data.quickStartUrl} aria-label={`Quick start ${data.title}`}>Quick start <Icon name="arrow-up-right" size={14} /></a>}
+              <a class="text-link project-link" href={data.repository} aria-label={`View ${data.title} on GitHub`}>Source <Icon name="arrow-up-right" size={14} /></a>
+            </div>
           </div>
           <p class="project-description">{data.description}</p>
-          <div class="project-body"><Content /></div>
-          <div class="project-footer">
-            <ul class="tags" aria-label={`${data.title} technologies`}>
-              {data.tags.map((tag) => <li>{tag}</li>)}
-            </ul>
-            <a class="text-link project-link" href={data.repository} aria-label={`View ${data.title} on GitHub`}>View on GitHub <Icon name="arrow-up-right" size={17} /></a>
-          </div>
         </article>
       ))}
     </div>
   </section>}
-
-  <section class="content-section notes-section" id="notes" aria-labelledby="notes-heading">
-    <div class="section-heading">
-      <span class="section-index" aria-hidden="true">{projects.length > 0 ? '02' : '01'} /</span>
-      <h2 id="notes-heading">Notes</h2>
-    </div>
-    <div class="notes-content">
-      <div>
-        <p class="notes-description">Articles and notes on CNBlogs.</p>
-        <p class="notes-caption">A little more room for words.</p>
-      </div>
-      <a class="text-link blog-link" href={site.blog}>Read the blog <Icon name="arrow-up-right" size={18} /></a>
-    </div>
-  </section>
 </BaseLayout>
+
+<script>
+  import '../scripts/copy-qq';
+</script>

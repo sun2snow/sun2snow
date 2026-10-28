@@ -1,7 +1,9 @@
 ---
 title: QOJ-Translate
-description: A Tampermonkey userscript that translates QOJ problem statements into Chinese.
+icon: translate
+description: Translate QOJ statements into Chinese.
 repository: https://github.com/sun2snow/QOJ-Translate
+installUrl: https://github.com/sun2snow/QOJ-Translate/raw/refs/heads/main/qoj-translate.user.js
 tags:
   - JavaScript
   - Userscript

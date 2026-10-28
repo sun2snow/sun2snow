@@ -1,6 +1,6 @@
 # sun2snow personal website
 
-An English, static personal homepage for **https://sun2snow.dpdns.org**. Built with Astro, Markdown and locally bundled fonts. No client-side JavaScript, analytics, third-party font requests, database or backend is required.
+An English, static personal homepage for **https://sun2snow.dpdns.org**. Built with Astro, Markdown and locally bundled fonts. The page works without JavaScript; a small local script adds the optional QQ copy button. No analytics, third-party font requests, database or backend is required.
 
 This directory is independent of the repository's GitHub profile. The root `README.md`, existing profile workflows and `output` branch remain unchanged. Only `website/dist/` is uploaded to GitHub Pages; profile statistics and contribution images are not included on the website.
 
@@ -31,14 +31,28 @@ The production files are generated in `website/dist/`. Do not commit `dist/`, `n
 | File | Purpose |
 | --- | --- |
 | `src/data/site.ts` | Identity, introduction, GitHub and blog URLs, metadata |
+| `src/data/accounts.ts` | Platform names, profile links and QQ number |
+| `src/scripts/copy-qq.ts` | QQ clipboard action, feedback and manual-copy fallback |
 | `src/content/projects/*.md` | Project descriptions, tags, repository URLs and ordering |
 | `src/pages/index.astro` | Homepage layout and Notes copy |
 | `src/styles/global.css` | Colors, spacing, typography and responsive layout |
+| `public/accounts/` | Official-site favicon snapshots; provenance and display treatments in `SOURCES.md` |
+| `src/components/AccountIcon.astro` | Shared decorative account icon rendering |
 | `public/avatar.png` | Local snapshot of the GitHub avatar |
 | `public/favicon.svg` | Sun-to-snow browser icon |
 | `public/social-card.png` | Committed 1200 × 630 sharing image |
 | `astro.config.mjs` | Canonical deployment origin and sitemap |
 | `public/CNAME` | Intended custom hostname |
+
+### Account-first layout
+
+The homepage highlights accounts in **Social & contact** and **Competitive programming** groups. Edit `src/data/accounts.ts` to update platform names, exact profile URLs, and the QQ number. Only QQ displays an account identifier. Cards size to their content and wrap naturally on smaller screens. Other cards show the platform icon and name followed by right-hand boxed arrow links; Luogu has a single card with two numbered links (`1`, `2`). QQ has a right-hand **Copy** button that writes the number only after a click or keyboard activation and briefly changes to **Copied** on success without adding a status sentence or shifting the layout. Failure feedback remains visible. HTTPS uses the Clipboard API; browsers without it (including HTTP) attempt the legacy copy command. If copying is blocked, the number is selected for manual copying. With JavaScript disabled or unavailable, the copy button stays hidden and a manual-copy hint remains visible.
+
+Account cards use locally stored favicons rather than initials. Original image bytes are kept intact; CSS filters and blend modes adapt monochrome marks and solid backings to the badge colors. The merged Luogu card uses one icon. Icons remain visible on phones, and the QQ number stays on one line. See [`public/accounts/SOURCES.md`](public/accounts/SOURCES.md) for upstream URLs and attribution.
+
+Projects appear below Notes as small, always-visible cards with a decorative 18px icon, one-line description, source link, and optional `installUrl` / `quickStartUrl` links. QOJ-Translate's **Install** link opens the supplied `.user.js` URL; installation is handled by the visitor's userscript manager, not by the homepage. Set frontmatter `icon` to `translate`, `gamepad`, or `code` (the default). Icons are inline SVGs, hidden from assistive technology, and do not add another row. Long Markdown bodies and technology tags remain in the source content but are not rendered on the homepage. The account-first view is tested to fit 1280 × 720, 1366 × 768, and 1440 × 900 viewports. Smaller screens scroll normally; content is never clipped to force a one-screen layout.
+
+The footer contains only the copyright signature. Arrow links use a warm-orange hover/focus treatment and a 1px arrow shift without moving the click target. Keyboard focus remains outlined; reduced-motion preferences disable movement and transitions. These effects are CSS-only.
 
 ### Add a project
 
@@ -47,6 +61,7 @@ Create another Markdown file in `src/content/projects/`:
 ```md
 ---
 title: Project name
+icon: code
 description: A short, factual description.
 repository: https://github.com/sun2snow/your-project
 tags:
@@ -58,7 +73,7 @@ draft: false
 Optional extra context goes here.
 ```
 
-Smaller `order` values appear first. `draft: true` excludes a project from the built homepage. If no published projects remain, the project section and its navigation links are hidden. The schema validates required fields and requires HTTPS repository links. Markdown is trusted author-controlled content: do not include secrets or unreviewed HTML from third parties. With a public Pages source repository, even draft files are publicly readable in Git history.
+Smaller `order` values appear first. `draft: true` excludes a project from the built homepage. If no published projects remain, the project section is hidden. The schema validates required fields and requires HTTPS repository and optional `installUrl` / `quickStartUrl` links. Markdown is trusted author-controlled content: do not include secrets or unreviewed HTML from third parties. With a public Pages source repository, even draft files are publicly readable in Git history.
 
 Notes currently links to **https://www.cnblogs.com/oier-wst**. Nothing is scraped or synchronized. Existing articles do not need to be translated or migrated.
 
@@ -93,7 +108,7 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm test
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm run social-card
 ```
 
-Tests exercise the production build on desktop and mobile: approved copy, external URLs, anchor navigation, local asset loading, no client scripts/cookies/remote requests, operation with JavaScript disabled, automated axe accessibility checks, keyboard skip navigation, reduced motion, overflow, sharing metadata, sitemap, robots, CNAME and the custom 404. Full-page previews are saved under `test-results/`. Automated accessibility checks supplement, rather than replace, manual inspection.
+Tests exercise the production build on desktop and mobile: approved copy, external URLs, anchor navigation, local asset loading, no cookies/remote requests, real clipboard copying and permission/unavailable-API fallbacks, operation with JavaScript disabled, automated axe accessibility checks, keyboard skip navigation, reduced motion, overflow, sharing metadata, sitemap, robots, CNAME and the custom 404. Full-page previews are saved under `test-results/`. Automated accessibility checks supplement, rather than replace, manual inspection.
 
 The Playwright preview server uses a separate port, **4322**, and always starts a fresh production preview. If that port is occupied, tests fail instead of silently testing another server. `--ignore-lock` keeps Astro in the foreground even inside coding-agent environments.
 

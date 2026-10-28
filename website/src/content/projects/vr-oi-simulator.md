@@ -1,7 +1,9 @@
 ---
 title: VR OI Simulator
-description: A first-person 3D browser game set in an Informatics Olympiad exam room.
+icon: gamepad
+description: A first-person OI exam-room game.
 repository: https://github.com/sun2snow/vr-oi-simulator
+quickStartUrl: https://vr-oi.sun2snow.dpdns.org/
 tags:
   - JavaScript
   - Three.js

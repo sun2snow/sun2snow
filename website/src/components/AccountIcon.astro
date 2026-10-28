@@ -1,0 +1,13 @@
+---
+import { accountIcons } from '../data/accounts';
+
+interface Props {
+  icon: keyof typeof accountIcons;
+}
+
+const { icon } = Astro.props;
+---
+
+<span class={`account-mark account-mark--${icon}`} aria-hidden="true">
+  <img src={accountIcons[icon]} alt="" width="20" height="20" decoding="async" />
+</span>
