@@ -208,6 +208,9 @@ test('fits the current homepage on laptop screens without hiding content', async
     await page.setViewportSize({ width, height });
     await page.evaluate(() => window.scrollTo(0, 0));
     expect(await page.evaluate(() => document.documentElement.scrollHeight), `${width} × ${height}`).toBeLessThanOrEqual(height);
+    expect(await page.locator('.hero-description').evaluate((element) =>
+      element.getBoundingClientRect().height <= parseFloat(getComputedStyle(element).lineHeight) + 1
+    ), `single-line introduction at ${width}px`).toBe(true);
     const cards = await page.locator('.account-card').all();
     const first = (await cards[0].boundingBox())!;
     const second = (await cards[1].boundingBox())!;
