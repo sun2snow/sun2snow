@@ -30,7 +30,7 @@ test('shows the approved content and working navigation', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Quick start Political Values' })).toHaveAttribute('href', 'https://zz.sun2snow.dpdns.org/');
   await expect(page.getByRole('link', { name: 'View Political Values on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/political-values');
   await expect(page.getByRole('link', { name: 'View WordMachine on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/WordMachine');
-  await expect(page.getByRole('link', { name: 'Install AtCoder Perf Graph' })).toHaveAttribute('href', 'https://raw.githubusercontent.com/sun2snow/atcoder-perf-graph/main/atcoder-perf-graph.user.js');
+  await expect(page.getByRole('link', { name: 'Install AtCoder Perf Graph' })).toHaveAttribute('href', 'https://greasyfork.org/en/scripts/605726-atcoder-perf-graph');
   await expect(page.getByRole('link', { name: 'View AtCoder Perf Graph on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/atcoder-perf-graph');
   await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://www.cnblogs.com/oier-wst');
   await expect(page.getByRole('link', { name: 'Visit GitHub', exact: true })).toHaveAttribute('href', 'https://github.com/sun2snow');
@@ -302,12 +302,12 @@ test('provides the exact userscript installation links alongside project source 
   const qojCard = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'QOJ-Translate', exact: true }) });
   const qojInstall = qojCard.getByRole('link', { name: 'Install QOJ-Translate', exact: true });
   await expect(qojInstall).toHaveText('Install');
-  await expect(qojInstall).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate/raw/refs/heads/main/qoj-translate.user.js');
+  await expect(qojInstall).toHaveAttribute('href', 'https://greasyfork.org/en/scripts/606061-qoj-%E4%B8%AD%E6%96%87%E9%A2%98%E9%9D%A2-responses-api');
   await expect(qojInstall).not.toHaveAttribute('download');
   const perfCard = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'AtCoder Perf Graph', exact: true }) });
   const perfInstall = perfCard.getByRole('link', { name: 'Install AtCoder Perf Graph', exact: true });
   await expect(perfInstall).toHaveText('Install');
-  await expect(perfInstall).toHaveAttribute('href', 'https://raw.githubusercontent.com/sun2snow/atcoder-perf-graph/main/atcoder-perf-graph.user.js');
+  await expect(perfInstall).toHaveAttribute('href', 'https://greasyfork.org/en/scripts/605726-atcoder-perf-graph');
   await expect(perfInstall).not.toHaveAttribute('download');
   await expect(page.locator('#projects .install-link')).toHaveCount(2);
   await qojInstall.focus();

@@ -3,7 +3,7 @@ title: AtCoder Perf Graph
 icon: chart
 description: Overlay Performance on AtCoder's Rating graph.
 repository: https://github.com/sun2snow/atcoder-perf-graph
-installUrl: https://raw.githubusercontent.com/sun2snow/atcoder-perf-graph/main/atcoder-perf-graph.user.js
+installUrl: https://greasyfork.org/en/scripts/605726-atcoder-perf-graph
 tags:
   - JavaScript
   - Userscript
