@@ -7,7 +7,7 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string().min(1),
     description: z.string().min(1),
-    icon: z.enum(['code', 'translate', 'gamepad']).default('code'),
+    icon: z.enum(['code', 'translate', 'gamepad', 'compass', 'book', 'chart']).default('code'),
     repository: z.url().refine((value) => value.startsWith('https://'), {
       message: 'Project links must use HTTPS.',
     }),

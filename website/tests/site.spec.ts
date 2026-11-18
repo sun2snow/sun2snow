@@ -14,13 +14,24 @@ test('shows the approved content and working navigation', async ({ page }) => {
   await expect(page.getByText('Find me around the web. Say hello, or meet me in a contest.')).toBeVisible();
   await expect(page.locator('#projects')).toBeVisible();
   await expect(page.locator('#projects details, #projects summary')).toHaveCount(0);
-  await expect(page.locator('.project-heading h3')).toHaveText(['QOJ-Translate', 'VR OI Simulator']);
+  await expect(page.locator('.project-heading h3')).toHaveText([
+    'QOJ-Translate',
+    'VR OI Simulator',
+    'Political Values',
+    'WordMachine',
+    'AtCoder Perf Graph',
+  ]);
   await expect(page.getByRole('heading', { name: 'QOJ-Translate' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'View QOJ-Translate on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate');
   const simulator = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'VR OI Simulator' }) });
   await expect(simulator.locator('.project-description')).toHaveText('A first-person OI exam-room game.');
   await expect(simulator.getByRole('link', { name: 'Quick start VR OI Simulator' })).toHaveAttribute('href', 'https://vr-oi.sun2snow.dpdns.org/');
   await expect(simulator.getByRole('link', { name: 'View VR OI Simulator on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/vr-oi-simulator');
+  await expect(page.getByRole('link', { name: 'Quick start Political Values' })).toHaveAttribute('href', 'https://zz.sun2snow.dpdns.org/');
+  await expect(page.getByRole('link', { name: 'View Political Values on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/political-values');
+  await expect(page.getByRole('link', { name: 'View WordMachine on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/WordMachine');
+  await expect(page.getByRole('link', { name: 'Install AtCoder Perf Graph' })).toHaveAttribute('href', 'https://raw.githubusercontent.com/sun2snow/atcoder-perf-graph/main/atcoder-perf-graph.user.js');
+  await expect(page.getByRole('link', { name: 'View AtCoder Perf Graph on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/atcoder-perf-graph');
   await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://www.cnblogs.com/oier-wst');
   await expect(page.getByRole('link', { name: 'Visit GitHub', exact: true })).toHaveAttribute('href', 'https://github.com/sun2snow');
   await expect(page.locator('a[target="_blank"]')).toHaveCount(0);
@@ -260,30 +271,48 @@ test('lists every supplied account with exact links and an honest QQ contact', a
   }
 });
 
-test('shows compact projects immediately and exposes a keyboard-accessible quick start', async ({ page }) => {
+test('shows compact projects immediately and exposes keyboard-accessible quick starts', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'QOJ-Translate' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'VR OI Simulator' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Political Values' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'WordMachine' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'AtCoder Perf Graph' })).toBeVisible();
   const quickStart = page.getByRole('link', { name: 'Quick start VR OI Simulator' });
   await quickStart.focus();
   await expect(quickStart).toBeFocused();
   await expect(quickStart).toHaveAttribute('href', 'https://vr-oi.sun2snow.dpdns.org/');
-  await expect(page.locator('#projects .quick-start')).toHaveCount(1);
+  const politicalStart = page.getByRole('link', { name: 'Quick start Political Values' });
+  await politicalStart.focus();
+  await expect(politicalStart).toBeFocused();
+  await expect(politicalStart).toHaveAttribute('href', 'https://zz.sun2snow.dpdns.org/');
+  await expect(page.locator('#projects .quick-start')).toHaveCount(2);
   await expect(page.locator('#projects summary, #projects .tags')).toHaveCount(0);
-  await expect(page.locator('.project-description')).toHaveText(['Translate QOJ statements into Chinese.', 'A first-person OI exam-room game.']);
+  await expect(page.locator('.project-description')).toHaveText([
+    'Translate QOJ statements into Chinese.',
+    'A first-person OI exam-room game.',
+    'A 96-question Chinese political-values self-test.',
+    'Multiplayer vocabulary battles with Flask & Vue 3.',
+    "Overlay Performance on AtCoder's Rating graph.",
+  ]);
 });
 
-test('provides the exact userscript installation link alongside the QOJ source link', async ({ page }) => {
+test('provides the exact userscript installation links alongside project source links', async ({ page }) => {
   await page.goto('/');
-  const card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'QOJ-Translate', exact: true }) });
-  const install = card.getByRole('link', { name: 'Install QOJ-Translate', exact: true });
-  await expect(install).toHaveText('Install');
-  await expect(install).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate/raw/refs/heads/main/qoj-translate.user.js');
-  await expect(install).not.toHaveAttribute('download');
-  await expect(page.locator('#projects .install-link')).toHaveCount(1);
-  await install.focus();
-  await expect(install).toBeFocused();
-  await expect(card.getByRole('link', { name: 'View QOJ-Translate on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate');
+  const qojCard = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'QOJ-Translate', exact: true }) });
+  const qojInstall = qojCard.getByRole('link', { name: 'Install QOJ-Translate', exact: true });
+  await expect(qojInstall).toHaveText('Install');
+  await expect(qojInstall).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate/raw/refs/heads/main/qoj-translate.user.js');
+  await expect(qojInstall).not.toHaveAttribute('download');
+  const perfCard = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'AtCoder Perf Graph', exact: true }) });
+  const perfInstall = perfCard.getByRole('link', { name: 'Install AtCoder Perf Graph', exact: true });
+  await expect(perfInstall).toHaveText('Install');
+  await expect(perfInstall).toHaveAttribute('href', 'https://raw.githubusercontent.com/sun2snow/atcoder-perf-graph/main/atcoder-perf-graph.user.js');
+  await expect(perfInstall).not.toHaveAttribute('download');
+  await expect(page.locator('#projects .install-link')).toHaveCount(2);
+  await qojInstall.focus();
+  await expect(qojInstall).toBeFocused();
+  await expect(qojCard.getByRole('link', { name: 'View QOJ-Translate on GitHub' })).toHaveAttribute('href', 'https://github.com/sun2snow/QOJ-Translate');
 });
 
 test('keeps account cards compact with readable text and comfortable click targets', async ({ page }) => {
@@ -383,9 +412,12 @@ for (const success of [true, false]) {
 test('adds decorative project icons and keeps only the signature in the footer', async ({ page }) => {
   await page.goto('/');
   const icons = page.locator('.project-heading h3 .project-icon');
-  await expect(icons).toHaveCount(2);
+  await expect(icons).toHaveCount(5);
   await expect(icons.nth(0)).toHaveClass(/project-icon--translate/);
   await expect(icons.nth(1)).toHaveClass(/project-icon--gamepad/);
+  await expect(icons.nth(2)).toHaveClass(/project-icon--compass/);
+  await expect(icons.nth(3)).toHaveClass(/project-icon--book/);
+  await expect(icons.nth(4)).toHaveClass(/project-icon--chart/);
   for (const icon of await icons.all()) {
     await expect(icon).toBeVisible();
     await expect(icon).toHaveAttribute('aria-hidden', 'true');
